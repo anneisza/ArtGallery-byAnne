@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bypass Atribusi AI — Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        :root {
+            --bg: #0a0a0f;
+            --bg-glass: rgba(24, 24, 35, 0.45);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-active: rgba(245, 158, 11, 0.4);
+            --text: #e0e0f0;
+            --text-muted: #94a3b8;
+            --accent: #eab308;
+            --accent-glow: rgba(234, 179, 8, 0.2);
+        }
+        body {
+            background-image: linear-gradient(rgba(10, 10, 15, 0.85), rgba(10, 10, 15, 0.85)),
+                              url('https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=1920');
+
+            background-size: cover;           /* Memastikan gambar menutup seluruh layar */
+            background-position: center;        /* Posisi gambar pas di tengah-tengah */
+            background-attachment: fixed;      /* Kunci background agar tidak ikut tergulung saat di-scroll */
+         color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; display: flex; min-height: 100vh; }
+
+        .sidebar { width: 240px; background: rgba(17, 17, 24, 0.85); backdrop-filter: blur(12px); border-right: 1px solid var(--border); padding: 2rem 0; display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 50; }
+        .sidebar-brand { padding: 0 2rem 2.5rem; font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; letter-spacing: 2px; font-style: italic; color: var(--text); }
+        .sidebar-section { padding: 0 1.5rem; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.75rem; margin-top: 1.5rem; font-weight: 700; }
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu a { display: block; padding: 0.75rem 2rem; color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .sidebar-menu a:hover, .sidebar-menu li.active a { color: var(--text); background: rgba(255, 255, 255, 0.05); border-left: 3px solid var(--accent); padding-left: 2.25rem; }
+
+        .main-content { flex: 1; margin-left: 240px; padding: 3rem; animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; }
+        .header h1 { font-family: 'Playfair Display', serif; font-size: 2.25rem; font-weight: 700; }
+        .header h1 span { color: var(--accent); font-style: italic; }
+
+        .card { background: var(--bg-glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); }
+        .card-title { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 600; margin-bottom: 1.5rem; }
+
+        table { width: 100%; border-collapse: collapse; text-align: left; margin-bottom: 1rem; }
+        th { padding: 1rem; font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border); letter-spacing: 1px; font-weight: 700; }
+        td { padding: 1.25rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+
+        .form-group { margin-bottom: 1.5rem; }
+        input[type="text"], select, textarea { width: 100%; padding: 0.75rem 1rem; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-family: inherit; font-size: 0.9rem; transition: all 0.3s ease; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); background: rgba(255, 255, 255, 0.06); box-shadow: 0 0 10px rgba(234, 179, 8, 0.2); }
+        /*atur dropdown*/
+        select option {
+            color: #2d3748;       /* Abu-abu gelap (Slate/Charcoal) */
+            background: #f7fafc;  /* Latar belakang putih gading yang lembut */
+        }
+        .btn { display: inline-flex; align-items: center; padding: 0.6rem 1.5rem; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.2s ease; border: none; }
+        .btn-warning { background: var(--accent); color: #0a0a0f; }
+        .btn-warning:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 12px var(--accent-glow); }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{layout/dashboard-sidebar :: admin-sidebar(active='bypassatribusi')}"></div>
+
+<div class="main-content">
+    <div class="header">
+        <h1>Force Override <span>Atribusi AI</span></h1>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Riwayat Pelabelan Integritas AI</div>
+        <div style="overflow-x:auto;">
+            <table>
+                <thead>
+                <tr>
+                    <th>Karya Seni</th>
+                    <th>Tingkat Keterlibatan AI</th>
+                    <th>Software Digunakan</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="ai : ${aiAttributions}">
+                    <td th:text="${ai.artwork.title}" style="font-weight:600;">Artwork Title</td>
+                    <td th:text="${ai.involvementLevel}">PURE_HUMAN</td>
+                    <td th:text="${ai.softwareUsed != null and ai.softwareUsed != '' ? ai.softwareUsed : '-'}">Midjourney</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(aiAttributions)}">
+                    <td colspan="3" style="text-align:center;color:var(--text-muted);padding:2rem;">Belum ada rekaman data atribusi kecerdasan buatan.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Form Atribusi AI Paksa</div>
+        <form th:action="@{/admin/bypass-atribusi-ai/simpan}" method="post">
+            <div class="form-group">
+                <label>Karya Sasaran</label>
+                <select name="artworkId" required>
+                    <option value="">-- Pilih karya --</option>
+                    <option th:each="aw : ${artworks}" th:value="${aw.id}" th:text="${aw.title}">Karya</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Tingkat Keterlibatan AI Nyata</label>
+                <select name="involvementLevel" required>
+                    <option value="PURE_HUMAN">Pure Human Art (100% Buatan Manusia)</option>
+                    <option value="AI_ASSISTED">AI-Assisted (Dibantu Algoritma AI)</option>
+                    <option value="FULLY_AI_GENERATED">Fully AI-Generated (Murni Buatan AI)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Mesin / Software AI yang Dipakai</label>
+                <input type="text" name="softwareUsed" placeholder="Midjourney v6, DALL-E 3, Stable Diffusion XL, dll.">
+            </div>
+            <div class="form-group">
+                <label>Teks Prompt / Rekayasa Perintah (Opsional)</label>
+                <textarea name="promptText" rows="3" placeholder="Salin prompt rahasia yang melahirkan karya seni ini jika ada..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-warning">Simpan Bypass Atribusi AI</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

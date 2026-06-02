@@ -1,0 +1,165 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ========================================== -->
+<!-- 1. FRAGMENT SIDEBAR ADMIN                  -->
+<!-- ========================================== -->
+<div th:fragment="admin-sidebar" class="custom-sidebar" style="
+    width: 240px; height: 100vh; background: rgba(17, 17, 24, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-right: 1px solid rgba(255, 255, 255, 0.08); padding: 2rem 0; display: flex; flex-direction: column;
+    font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box; position: fixed; top: 0; left: 0; z-index: 50;
+">
+    <div style="padding: 0 2rem 2.5rem; font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; letter-spacing: 2px; font-style: italic; color: #e0e0f0;">ART GALLERY.</div>
+    <div style="padding: 0 2rem; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: #94a3b8; margin-bottom: 0.75rem; font-weight: 700;">Menu Admin</div>
+
+    <a th:href="@{/admin/dashboard}" style="text-decoration:none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);"
+       th:styleappend="${active=='dashboard'} ? 'display:block; padding:0.75rem 2rem; color:#e0e0f0; background:rgba(255, 255, 255, 0.05); border-left:3px solid #4f6ef7; padding-left:2.25rem; font-weight:600;' : 'display:block; padding:0.75rem 2rem; color:#94a3b8; font-weight:500;'"
+       onmouseover="if(!this.style.borderLeft) { this.style.color='#e0e0f0'; this.style.background='rgba(255, 255, 255, 0.05)'; this.style.paddingLeft='2.25rem'; this.style.borderLeft='3px solid rgba(79, 110, 247, 0.5)'; }"
+       onmouseout="if(this.getAttribute('style').indexOf('border-left:3px solid #4f6ef7') === -1) { this.style.color='#94a3b8'; this.style.background='transparent'; this.style.paddingLeft='2rem'; this.style.borderLeft='none'; }">
+        Dashboard
+    </a>
+    <a th:href="@{/admin/karya-seni}" style="text-decoration:none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);"
+       th:styleappend="${active=='karyaseni'} ? 'display:block; padding:0.75rem 2rem; color:#e0e0f0; background:rgba(255, 255, 255, 0.05); border-left:3px solid #4f6ef7; padding-left:2.25rem; font-weight:600;' : 'display:block; padding:0.75rem 2rem; color:#94a3b8; font-weight:500;'"
+       onmouseover="if(!this.style.borderLeft) { this.style.color='#e0e0f0'; this.style.background='rgba(255, 255, 255, 0.05)'; this.style.paddingLeft='2.25rem'; this.style.borderLeft='3px solid rgba(79, 110, 247, 0.5)'; }"
+       onmouseout="if(this.getAttribute('style').indexOf('border-left:3px solid #4f6ef7') === -1) { this.style.color='#94a3b8'; this.style.background='transparent'; this.style.paddingLeft='2rem'; this.style.borderLeft='none'; }">
+        Karya Seni
+    </a>
+    <a th:href="@{/admin/seniman}" style="text-decoration:none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);"
+       th:styleappend="${active=='seniman'} ? 'display:block; padding:0.75rem 2rem; color:#e0e0f0; background:rgba(255, 255, 255, 0.05); border-left:3px solid #4f6ef7; padding-left:2.25rem; font-weight:600;' : 'display:block; padding:0.75rem 2rem; color:#94a3b8; font-weight:500;'"
+       onmouseover="if(!this.style.borderLeft) { this.style.color='#e0e0f0'; this.style.background='rgba(255, 255, 255, 0.05)'; this.style.paddingLeft='2.25rem'; this.style.borderLeft='3px solid rgba(79, 110, 247, 0.5)'; }"
+       onmouseout="if(this.getAttribute('style').indexOf('border-left:3px solid #4f6ef7') === -1) { this.style.color='#94a3b8'; this.style.background='transparent'; this.style.paddingLeft='2rem'; this.style.borderLeft='none'; }">
+        Seniman
+    </a>
+    <a th:href="@{/admin/pameran}" style="text-decoration:none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);"
+       th:styleappend="${active=='pameran'} ? 'display:block; padding:0.75rem 2rem; color:#e0e0f0; background:rgba(255, 255, 255, 0.05); border-left:3px solid #4f6ef7; padding-left:2.25rem; font-weight:600;' : 'display:block; padding:0.75rem 2rem; color:#94a3b8; font-weight:500;'"
+       onmouseover="if(!this.style.borderLeft) { this.style.color='#e0e0f0'; this.style.background='rgba(255, 255, 255, 0.05)'; this.style.paddingLeft='2.25rem'; this.style.borderLeft='3px solid rgba(79, 110, 247, 0.5)'; }"
+       onmouseout="if(this.getAttribute('style').indexOf('border-left:3px solid #4f6ef7') === -1) { this.style.color='#94a3b8'; this.style.background='transparent'; this.style.paddingLeft='2rem'; this.style.borderLeft='none'; }">
+        Pameran
+    </a>
+    <a th:href="@{/admin/info-galeri}" style="text-decoration:none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);"
+       th:styleappend="${active=='infogaleri'} ? 'display:block; padding:0.75rem 2rem; color:#e0e0f0; background:rgba(255, 255, 255, 0.05); border-left:3px solid #4f6ef7; padding-left:2.25rem; font-weight:600;' : 'display:block; padding:0.75rem 2rem; color:#94a3b8; font-weight:500;'"
+       onmouseover="if(!this.style.borderLeft) { this.style.color='#e0e0f0'; this.style.background='rgba(255, 255, 255, 0.05)'; this.style.paddingLeft='2.25rem'; this.style.borderLeft='3px solid rgba(79, 110, 247, 0.5)'; }"
+       onmouseout="if(this.getAttribute('style').indexOf('border-left:3px solid #4f6ef7') === -1) { this.style.color='#94a3b8'; this.style.background='transparent'; this.style.paddingLeft='2rem'; this.style.borderLeft='none'; }">
+        Info Galeri
+    </a>
+    <a th:href="@{/admin/akun-kurator}" style="text-decoration:none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);"
+       th:styleappend="${active=='akunkurator'} ? 'display:block; padding:0.75rem 2rem; color:#e0e0f0; background:rgba(255, 255, 255, 0.05); border-left:3px solid #4f6ef7; padding-left:2.25rem; font-weight:600;' : 'display:block; padding:0.75rem 2rem; color:#94a3b8; font-weight:500;'"
+       onmouseover="if(!this.style.borderLeft) { this.style.color='#e0e0f0'; this.style.background='rgba(255, 255, 255, 0.05)'; this.style.paddingLeft='2.25rem'; this.style.borderLeft='3px solid rgba(79, 110, 247, 0.5)'; }"
+       onmouseout="if(this.getAttribute('style').indexOf('border-left:3px solid #4f6ef7') === -1) { this.style.color='#94a3b8'; this.style.background='transparent'; this.style.paddingLeft='2rem'; this.style.borderLeft='none'; }">
+        Akun Kurator
+    </a>
+
+    <div style="padding: 0 2rem; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: #94a3b8; margin-bottom: 0.75rem; margin-top: 1.5rem; font-weight: 700;">Bypass Fitur</div>
+    <a th:href="@{/admin/bypass-kurasi}" style="text-decoration:none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);"
+       th:styleappend="${active=='bypasskurasi'} ? 'display:block; padding:0.75rem 2rem; color:#e0e0f0; background:rgba(255, 255, 255, 0.05); border-left:3px solid #4f6ef7; padding-left:2.25rem; font-weight:600;' : 'display:block; padding:0.75rem 2rem; color:#94a3b8; font-weight:500;'"
+       onmouseover="if(!this.style.borderLeft) { this.style.color='#e0e0f0'; this.style.background='rgba(255, 255, 255, 0.05)'; this.style.paddingLeft='2.25rem'; this.style.borderLeft='3px solid rgba(79, 110, 247, 0.5)'; }"
+       onmouseout="if(this.getAttribute('style').indexOf('border-left:3px solid #4f6ef7') === -1) { this.style.color='#94a3b8'; this.style.background='transparent'; this.style.paddingLeft='2rem'; this.style.borderLeft='none'; }">
+        Bypass Kurasi
+    </a>
+    <a th:href="@{/admin/bypass-atribusi-ai}" style="text-decoration:none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);"
+       th:styleappend="${active=='bypassatribusi'} ? 'display:block; padding:0.75rem 2rem; color:#e0e0f0; background:rgba(255, 255, 255, 0.05); border-left:3px solid #4f6ef7; padding-left:2.25rem; font-weight:600;' : 'display:block; padding:0.75rem 2rem; color:#94a3b8; font-weight:500;'"
+       onmouseover="if(!this.style.borderLeft) { this.style.color='#e0e0f0'; this.style.background='rgba(255, 255, 255, 0.05)'; this.style.paddingLeft='2.25rem'; this.style.borderLeft='3px solid rgba(79, 110, 247, 0.5)'; }"
+       onmouseout="if(this.getAttribute('style').indexOf('border-left:3px solid #4f6ef7') === -1) { this.style.color='#94a3b8'; this.style.background='transparent'; this.style.paddingLeft='2rem'; this.style.borderLeft='none'; }">
+        Bypass Atribusi AI
+    </a>
+
+    <!-- Footer Menu Sistem Admin -->
+    <div style="margin-top: auto; padding-top: 1.5rem; display: flex; flex-direction: column;">
+        <div style="padding: 0 2rem; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: #94a3b8; margin-bottom: 0.5rem; font-weight: 700;">Sistem</div>
+        <a th:href="@{/}" style="display: block; padding: 0.75rem 2rem; font-size: 0.9rem; color: #94a3b8; text-decoration: none; font-weight: 500; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);"
+           onmouseover="this.style.color='#e0e0f0'; this.style.background='rgba(255, 255, 255, 0.05)'; this.style.paddingLeft='2.25rem'; this.style.borderLeft='3px solid rgba(255, 255, 255, 0.3)';"
+           onmouseout="this.style.color='#94a3b8'; this.style.background='transparent'; this.style.paddingLeft='2rem'; this.style.borderLeft='none';">
+            👁 Lihat Website
+        </a>
+        <form th:action="@{/logout}" method="post" style="margin: 0; padding: 0;">
+            <button type="submit" style="width: 100%; text-align: left; background: transparent; border: none; padding: 0.75rem 2rem; color: #f87171; cursor: pointer; font-size: 0.9rem; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; display: block; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);"
+                    onmouseover="this.style.color='#ef4444'; this.style.background='rgba(239, 68, 68, 0.08)'; this.style.paddingLeft='2.25rem'; this.style.borderLeft='3px solid #ef4444';"
+                    onmouseout="this.style.color='#f87171'; this.style.background='transparent'; this.style.paddingLeft='2rem'; this.style.borderLeft='none';">
+                🏹 Logout
+            </button>
+        </form>
+    </div>
+</div>
+
+
+<!-- ========================================== -->
+<!-- 2. ✨ REVISI FRAGMENT: SIDEBAR KURATOR     -->
+<!-- ========================================== -->
+<div th:fragment="kurator-sidebar" class="custom-sidebar" style="
+    width: 240px; height: 100vh; background: rgba(17, 17, 24, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-right: 1px solid rgba(255, 255, 255, 0.08); padding: 2rem 0; display: flex; flex-direction: column;
+    font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box; position: fixed; top: 0; left: 0; z-index: 50;
+">
+    <div style="padding: 0 2rem 2.5rem; font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; letter-spacing: 2px; font-style: italic; color: #e0e0f0;">ART GALLERY.</div>
+
+    <!-- Bagian 1: Otoritas Seni -->
+    <div style="padding: 0 2rem; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: #7c3aed; margin-bottom: 0.75rem; font-weight: 700;">Otoritas Seni</div>
+
+    <!-- Menu: Dashboard -->
+    <a th:href="@{/kurator/dashboard}" style="text-decoration:none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);"
+       th:styleappend="${active=='dashboard'} ? 'display:block; padding:0.75rem 2rem; color:#e0e0f0; background:rgba(255, 255, 255, 0.05); border-left:3px solid #7c3aed; padding-left:2.25rem; font-weight:600;' : 'display:block; padding:0.75rem 2rem; color:#94a3b8; font-weight:500;'"
+       onmouseover="if(!this.style.borderLeft) { this.style.color='#e0e0f0'; this.style.background='rgba(255, 255, 255, 0.05)'; this.style.paddingLeft='2.25rem'; this.style.borderLeft='3px solid rgba(124, 58, 247, 0.5)'; }"
+       onmouseout="if(this.getAttribute('style').indexOf('border-left:3px solid #7c3aed') === -1) { this.style.color='#94a3b8'; this.style.background='transparent'; this.style.paddingLeft='2rem'; this.style.borderLeft='none'; }">
+        Dashboard
+    </a>
+
+    <!-- Menu: Kurasi Karya -->
+    <a th:href="@{/kurator/kurasi}" style="text-decoration:none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);"
+       th:styleappend="${active=='kurasi'} ? 'display:block; padding:0.75rem 2rem; color:#e0e0f0; background:rgba(255, 255, 255, 0.05); border-left:3px solid #7c3aed; padding-left:2.25rem; font-weight:600;' : 'display:block; padding:0.75rem 2rem; color:#94a3b8; font-weight:500;'"
+       onmouseover="if(!this.style.borderLeft) { this.style.color='#e0e0f0'; this.style.background='rgba(255, 255, 255, 0.05)'; this.style.paddingLeft='2.25rem'; this.style.borderLeft='3px solid rgba(124, 58, 247, 0.5)'; }"
+       onmouseout="if(this.getAttribute('style').indexOf('border-left:3px solid #7c3aed') === -1) { this.style.color='#94a3b8'; this.style.background='transparent'; this.style.paddingLeft='2rem'; this.style.borderLeft='none'; }">
+        Kurasi Karya
+    </a>
+
+    <!-- Menu: Atribusi AI -->
+    <a th:href="@{/kurator/atribusi-ai}" style="text-decoration:none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);"
+       th:styleappend="${active=='atribusiai'} ? 'display:block; padding:0.75rem 2rem; color:#e0e0f0; background:rgba(255, 255, 255, 0.05); border-left:3px solid #7c3aed; padding-left:2.25rem; font-weight:600;' : 'display:block; padding:0.75rem 2rem; color:#94a3b8; font-weight:500;'"
+       onmouseover="if(!this.style.borderLeft) { this.style.color='#e0e0f0'; this.style.background='rgba(255, 255, 255, 0.05)'; this.style.paddingLeft='2.25rem'; this.style.borderLeft='3px solid rgba(124, 58, 247, 0.5)'; }"
+       onmouseout="if(this.getAttribute('style').indexOf('border-left:3px solid #7c3aed') === -1) { this.style.color='#94a3b8'; this.style.background='transparent'; this.style.paddingLeft='2rem'; this.style.borderLeft='none'; }">
+        Atribusi AI
+    </a>
+
+    <!-- Menu: Riwayat Aktivitas -->
+    <a th:href="@{/kurator/riwayat}" style="text-decoration:none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);"
+       th:styleappend="${active=='riwayat'} ? 'display:block; padding:0.75rem 2rem; color:#e0e0f0; background:rgba(255, 255, 255, 0.05); border-left:3px solid #7c3aed; padding-left:2.25rem; font-weight:600;' : 'display:block; padding:0.75rem 2rem; color:#94a3b8; font-weight:500;'"
+       onmouseover="if(!this.style.borderLeft) { this.style.color='#e0e0f0'; this.style.background='rgba(255, 255, 255, 0.05)'; this.style.paddingLeft='2.25rem'; this.style.borderLeft='3px solid rgba(124, 58, 247, 0.5)'; }"
+       onmouseout="if(this.getAttribute('style').indexOf('border-left:3px solid #7c3aed') === -1) { this.style.color='#94a3b8'; this.style.background='transparent'; this.style.paddingLeft='2rem'; this.style.borderLeft='none'; }">
+        Riwayat Aktivitas
+    </a>
+
+    <!-- Bagian 2: Akun Saya -->
+    <div style="padding: 0 2rem; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: #94a3b8; margin-bottom: 0.75rem; margin-top: 1.5rem; font-weight: 700;">Akun Saya</div>
+
+    <!-- Menu: Profil Kurator -->
+    <a th:href="@{/kurator/profil}" style="text-decoration:none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);"
+       th:styleappend="${active=='profil'} ? 'display:block; padding:0.75rem 2rem; color:#e0e0f0; background:rgba(255, 255, 255, 0.05); border-left:3px solid #7c3aed; padding-left:2.25rem; font-weight:600;' : 'display:block; padding:0.75rem 2rem; color:#94a3b8; font-weight:500;'"
+       onmouseover="if(!this.style.borderLeft) { this.style.color='#e0e0f0'; this.style.background='rgba(255, 255, 255, 0.05)'; this.style.paddingLeft='2.25rem'; this.style.borderLeft='3px solid rgba(124, 58, 247, 0.5)'; }"
+       onmouseout="if(this.getAttribute('style').indexOf('border-left:3px solid #7c3aed') === -1) { this.style.color='#94a3b8'; this.style.background='transparent'; this.style.paddingLeft='2rem'; this.style.borderLeft='none'; }">
+        Profil Kurator
+    </a>
+
+    <!-- Footer Menu Sistem Kurator -->
+    <div style="margin-top: auto; padding-top: 1.5rem; display: flex; flex-direction: column;">
+        <div style="padding: 0 2rem; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: #94a3b8; margin-bottom: 0.5rem; font-weight: 700;">Sistem</div>
+        <a th:href="@{/}" style="display: block; padding: 0.75rem 2rem; font-size: 0.9rem; color: #94a3b8; text-decoration: none; font-weight: 500; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);"
+           onmouseover="this.style.color='#e0e0f0'; this.style.background='rgba(255, 255, 255, 0.05)'; this.style.paddingLeft='2.25rem'; this.style.borderLeft='3px solid rgba(255, 255, 255, 0.3)';"
+           onmouseout="this.style.color='#94a3b8'; this.style.background='transparent'; this.style.paddingLeft='2rem'; this.style.borderLeft='none';">
+            👁 Lihat Website
+        </a>
+        <form th:action="@{/logout}" method="post" style="margin: 0; padding: 0;">
+            <button type="submit" style="width: 100%; text-align: left; background: transparent; border: none; padding: 0.75rem 2rem; color: #f87171; cursor: pointer; font-size: 0.9rem; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; display: block; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);"
+                    onmouseover="this.style.color='#ef4444'; this.style.background='rgba(239, 68, 68, 0.08)'; this.style.paddingLeft='2.25rem'; this.style.borderLeft='3px solid #ef4444';"
+                    onmouseout="this.style.color='#f87171'; this.style.background='transparent'; this.style.paddingLeft='2rem'; this.style.borderLeft='none';">
+                🏹 Logout
+            </button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

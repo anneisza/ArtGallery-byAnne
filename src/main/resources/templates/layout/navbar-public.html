@@ -1,0 +1,76 @@
+<nav xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+     th:fragment="navbar(active)"
+     style="
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 3rem;
+        background: rgba(17, 17, 24, 0.75);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-bottom: 1px solid #2a2a3a;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 100;
+        box-sizing: border-box;
+     ">
+
+    <span style="font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; letter-spacing: 2px; color: #e0e0f0; font-style: italic;">
+        ART GALLERY.
+    </span>
+
+    <div style="display: flex; gap: 2rem; align-items: center; font-family: 'Plus Jakarta Sans', sans-serif;">
+
+        <a th:href="@{/home}" style="font-size: 0.9rem; transition: color 0.2s ease; text-decoration: none;"
+           th:styleappend="${active=='home'} ? 'color:#e0e0f0; font-weight:600;' : 'color:#8888aa;'"
+           onmouseover="this.style.color='#e0e0f0'"
+           th:onmouseout="${active=='home'} ? 'this.style.color=\'#e0e0f0\'' : 'this.style.color=\'#8888aa\''">Home</a>
+
+        <a th:href="@{/gallery}" style="font-size: 0.9rem; transition: color 0.2s ease; text-decoration: none;"
+           th:styleappend="${active=='gallery'} ? 'color:#e0e0f0; font-weight:600;' : 'color:#8888aa;'"
+           onmouseover="this.style.color='#e0e0f0'"
+           th:onmouseout="${active=='gallery'} ? 'this.style.color=\'#e0e0f0\'' : 'this.style.color=\'#8888aa\''">Gallery</a>
+
+        <a th:href="@{/exhibition}" style="font-size: 0.9rem; transition: color 0.2s ease; text-decoration: none;"
+           th:styleappend="${active=='exhibition'} ? 'color:#e0e0f0; font-weight:600;' : 'color:#8888aa;'"
+           onmouseover="this.style.color='#e0e0f0'"
+           th:onmouseout="${active=='exhibition'} ? 'this.style.color=\'#e0e0f0\'' : 'this.style.color=\'#8888aa\''">Exhibition</a>
+
+        <a th:href="@{/artists}" style="font-size: 0.9rem; transition: color 0.2s ease; text-decoration: none;"
+           th:styleappend="${active=='artists'} ? 'color:#e0e0f0; font-weight:600;' : 'color:#8888aa;'"
+           onmouseover="this.style.color='#e0e0f0'"
+           th:onmouseout="${active=='artists'} ? 'this.style.color=\'#e0e0f0\'' : 'this.style.color=\'#8888aa\''">Artists</a>
+
+        <a th:href="@{/about}" style="font-size: 0.9rem; transition: color 0.2s ease; text-decoration: none;"
+           th:styleappend="${active=='about'} ? 'color:#e0e0f0; font-weight:600;' : 'color:#8888aa;'"
+           onmouseover="this.style.color='#e0e0f0'"
+           th:onmouseout="${active=='about'} ? 'this.style.color=\'#e0e0f0\'' : 'this.style.color=\'#8888aa\''">About</a>
+
+        <a sec:authorize="isAnonymous()" th:href="@{/login}"
+           style="background: #4f6ef7; color: white; padding: 0.4rem 1rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: background 0.2s;"
+           onmouseover="this.style.background='#3b5bdb'" onmouseout="this.style.background='#4f6ef7'">
+            Login
+        </a>
+
+        <div sec:authorize="isAuthenticated()" style="display: flex; gap: 1rem; align-items: center;">
+            <a th:href="${#authorization.expression('hasRole(''ADMIN'')')} ? @{/admin/dashboard} : @{/kurator/dashboard}"
+               style="background: rgba(79, 110, 247, 0.15); color: #4f6ef7; border: 1px solid rgba(79, 110, 247, 0.4); padding: 0.4rem 1rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: all 0.2s;"
+               onmouseover="this.style.background='#4f6ef7'; this.style.color='white'"
+               onmouseout="this.style.background='rgba(79, 110, 247, 0.15)'; this.style.color='#4f6ef7'">
+                <span>Dashboard</span>
+            </a>
+
+            <form th:action="@{/logout}" method="post" style="margin: 0; padding: 0; display: inline;">
+                <button type="submit"
+                        style="background: transparent; color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); padding: 0.4rem 1rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.2s;"
+                        onmouseover="this.style.background='#ef4444'; this.style.color='white'"
+                        onmouseout="this.style.background='transparent'; this.style.color='#f87171'">
+                    Logout
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>

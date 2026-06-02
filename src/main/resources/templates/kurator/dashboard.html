@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Kurator — Art Gallery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        :root {
+            --bg: #0a0a0f;
+            --bg-glass: rgba(24, 24, 35, 0.45);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-active: rgba(124, 58, 237, 0.4);
+            --text: #e0e0f0;
+            --text-muted: #94a3b8;
+            --accent: #7c3aed; /* Menggunakan Aksen Ungu Violet Mewah untuk Kurator */
+            --accent-glow: rgba(124, 58, 237, 0.3);
+            --green: #22c55e;
+            --yellow: #eab308;
+            --red: #ef4444;
+        }
+        body {            background-image: linear-gradient(rgba(10, 10, 15, 0.85), rgba(10, 10, 15, 0.85)),
+                              url('https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=1920');
+
+            background-size: cover;           /* Memastikan gambar menutup seluruh layar */
+            background-position: center;        /* Posisi gambar pas di tengah-tengah */
+            background-attachment: fixed;      /* Kunci background agar tidak ikut tergulung saat di-scroll */  color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; display: flex; min-height: 100vh; }
+
+        .sidebar { width: 240px; background: rgba(17, 17, 24, 0.85); backdrop-filter: blur(12px); border-right: 1px solid var(--border); padding: 2rem 0; display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 50; }
+        .sidebar-brand { padding: 0 2rem 2.5rem; font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; letter-spacing: 2px; font-style: italic; color: var(--text); }
+        .sidebar-section { padding: 0 1.5rem; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.75rem; margin-top: 1.5rem; font-weight: 700; }
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu a { display: block; padding: 0.75rem 2rem; color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .sidebar-menu a:hover, .sidebar-menu li.active a { color: var(--text); background: rgba(255, 255, 255, 0.05); border-left: 3px solid var(--accent); padding-left: 2.25rem; }
+
+        .main-content { flex: 1; margin-left: 240px; padding: 3rem; animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; }
+        .header h1 { font-family: 'Playfair Display', serif; font-size: 2.25rem; font-weight: 700; }
+        .header h1 span { color: var(--accent); font-style: italic; }
+
+        .card { background: var(--bg-glass); backdrop-filter: blur(16px); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); }
+        .card-title { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 600; margin-bottom: 1.5rem; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem; }
+        .stat-card { background: var(--bg-glass); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; backdrop-filter: blur(12px); }
+        .stat-num { font-size: 2rem; font-weight: 700; color: var(--accent); font-family: 'Playfair Display', serif; }
+        .stat-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 0.25rem; }
+
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { padding: 1rem; font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border); letter-spacing: 1px; font-weight: 700; }
+        td { padding: 1.25rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+
+        .badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+        .badge-pending { background: rgba(234, 179, 8, 0.15); color: var(--yellow); border: 1px solid rgba(234, 179, 8, 0.3); }
+        .badge-approved { background: rgba(34, 197, 94, 0.15); color: var(--green); border: 1px solid rgba(34, 197, 94, 0.3); }
+        .badge-rejected { background: rgba(239, 68, 68, 0.15); color: var(--red); border: 1px solid rgba(239, 68, 68, 0.3); }
+
+        .btn { display: inline-flex; align-items: center; padding: 0.5rem 1.25rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.2s ease; border: none; }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 12px var(--accent-glow); }
+        .btn-logout { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+        .btn-logout:hover { color: var(--text); border-color: var(--text-muted); }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{layout/dashboard-sidebar :: kurator-sidebar(active='dashboard')}"></div>
+
+<div class="main-content">
+    <div class="header">
+        <h1>Dashboard <span>Kurator</span></h1>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); width:100%; display:contents;">
+            <div class="stat-card">
+                <div class="stat-num" th:text="${#lists.size(curations)}">0</div>
+                <div class="stat-label">Total Penugasan</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num" style="color:var(--green);" th:text="${#lists.size(curations.?[status.name() == 'APPROVED'])}">0</div>
+                <div class="stat-label">Karya Diloloskan</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num" style="color:var(--yellow);" th:text="${#lists.size(curations.?[status.name() == 'PENDING'])}">0</div>
+                <div class="stat-label">Antrean Tertunda</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Antrean Kurasi Masuk</div>
+        <div style="overflow-x:auto;">
+            <table>
+                <thead>
+                <tr>
+                    <th>Judul Karya</th>
+                    <th>Seniman</th>
+                    <th>Pameran Terkait</th>
+                    <th>Status Berjalan</th>
+                    <th>Aksi</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="cur : ${curations}">
+                    <td th:text="${cur.artwork.title}" style="font-weight: 600;">-</td>
+                    <td th:text="${cur.artwork.artist != null ? cur.artwork.artist.name : '-'}">-</td>
+                    <td th:text="${cur.artwork.exhibition != null ? cur.artwork.exhibition.title : '-'}">-</td>
+                    <td>
+                            <span class="badge"
+                                  th:classappend="${cur.status.name() == 'PENDING'} ? 'badge-pending' : (${cur.status.name() == 'APPROVED'} ? 'badge-approved' : 'badge-rejected')"
+                                  th:text="${cur.status}">Pending</span>
+                    </td>
+                    <td><a th:href="@{/kurator/kurasi}" class="btn btn-primary">Kelola</a></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(curations)}">
+                    <td colspan="5" style="text-align:center;color:var(--text-muted);padding:3rem;">Tidak ada antrean penilaian berkas karya seni.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

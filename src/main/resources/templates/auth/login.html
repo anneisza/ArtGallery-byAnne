@@ -1,0 +1,161 @@
+<!-- src/main/resources/templates/auth/login.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — Art Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            /* Sinkronisasi Tema Gelap Premium / Mamba */
+            --bg: #0d0d0d;
+            --bg2: #121212;
+            --bg3: #181818;
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #ffffff;
+            --text-muted: #8e8e93;
+            --accent: #ffffff;
+        }
+        body {
+            /* Gabungan linear-gradient (gelap) + gambar dari folder lokal */
+            background: linear-gradient(to bottom, rgba(13, 13, 13, 0.88), rgba(13, 13, 13, 0.96)),
+                        url('./photos/background.png') no-repeat center center fixed;
+
+            background-size: cover;
+
+            color: var(--text);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+
+            color: var(--text);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh; display: flex;
+        }
+
+        h1, h2, .brand {
+            font-family: 'Playfair Display', serif !important;
+        }
+
+        /* Panel Kiri Estetik Minimalis */
+        .left-panel {
+            width: 45%; background: var(--bg2); padding: 4rem;
+            display: flex; flex-direction: column; justify-content: space-between;
+            border-right: 1px solid var(--border);
+        }
+        .brand { font-size: 1.1rem; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; }
+        .left-content { margin-top: 4rem; }
+        .left-content .label {
+            font-size: 0.7rem; color: var(--text-muted); letter-spacing: 3px;
+            text-transform: uppercase; margin-bottom: 1.5rem; font-weight: 600;
+        }
+        .left-content h1 { font-size: 3rem; line-height: 1.2; font-weight: 400; }
+        .left-content h1 span { color: var(--text-muted); font-style: italic; }
+        .left-content p { margin-top: 1.5rem; color: var(--text-muted); font-size: 0.95rem; font-weight: 300; line-height: 1.6; max-width: 400px; }
+        .left-footer { color: var(--text-muted); font-size: 0.75rem; font-weight: 300; }
+
+        /* Panel Kanan Kontainer Login */
+        .right-panel {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            padding: 2rem; background: var(--bg);
+        }
+        .login-card {
+            background: var(--bg2); border: 1px solid var(--border);
+            border-radius: 4px; padding: 3rem 2.5rem; width: 100%; max-width: 440px;
+        }
+        .login-card h2 { font-size: 1.8rem; margin-bottom: 0.5rem; font-weight: 400; }
+        .login-card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2.5rem; font-weight: 300; }
+
+        .form-group { margin-bottom: 1.5rem; }
+        label { display: block; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase;
+                color: var(--text-muted); margin-bottom: 0.6rem; font-weight: 600; }
+
+        /* Input Field Matte */
+        input[type="email"], input[type="password"] {
+            width: 100%; padding: 0.85rem 1rem; background: var(--bg3);
+            border: 1px solid var(--border); border-radius: 4px; color: var(--text);
+            font-size: 0.9rem; font-family: inherit; font-weight: 300; outline: none; transition: border-color 0.2s;
+        }
+        input[type="email"]:focus, input[type="password"]:focus { border-color: rgba(255, 255, 255, 0.3); }
+
+        .form-row { display: flex; justify-content: space-between; align-items: center;
+                    margin-bottom: 2rem; font-size: 0.85rem; color: var(--text-muted); font-weight: 300; }
+        .form-row a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .form-row a:hover { color: var(--text); }
+
+        /* Tombol Utama Putih Solid Padat */
+        .btn-login {
+            width: 100%; padding: 0.9rem; background: var(--accent); color: #000000;
+            border: none; border-radius: 4px; font-size: 0.85rem; font-weight: 700;
+            cursor: pointer; letter-spacing: 2px; transition: opacity 0.2s; text-transform: uppercase;
+        }
+        .btn-login:hover { opacity: 0.9; }
+
+        /* Notifikasi Alert */
+        .alert { padding: 0.85rem 1rem; border-radius: 4px; margin-bottom: 1.5rem; font-size: 0.85rem; font-weight: 300; }
+        .alert-error { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); color: #f87171; }
+
+        .divider { text-align: center; color: var(--border); font-size: 0.75rem; letter-spacing: 2px; margin: 2rem 0 1.5rem; }
+        .nav-footer { display: flex; gap: 1.5rem; margin-top: 1.5rem; }
+        .nav-footer a { color: var(--text-muted); font-size: 0.8rem; text-decoration: none; transition: color 0.2s; }
+        .nav-footer a:hover { color: var(--text); }
+
+        .signup-text a { color: var(--text); text-decoration: none; font-weight: 500; }
+        .signup-text a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+<div class="left-panel">
+    <div class="brand" style="font-style: italic;">ART GALLERY.</div>
+    <div class="left-content">
+        <div class="label">With Curation</div>
+        <h1>Art Gallery |<br><span>Future of Antiquity</span></h1>
+        <p>Access the secure curator portal to manage digital art spaces, artist directories, and computational attributions.</p>
+    </div>
+    <div class="left-footer">
+        <div class="nav-footer">
+            <a href="/home">Home</a>
+            <a href="#">Privacy</a>
+            <a href="#">Help</a>
+        </div>
+        <p style="margin-top: 1.25rem;">© 2026 ART GALLERY</p>
+    </div>
+</div>
+<div class="right-panel">
+    <div class="login-card">
+        <h2>Welcome Back</h2>
+        <p>Sign in to continue your journey</p>
+
+        <!-- Pesan Validasi Error Thymeleaf -->
+        <div th:if="${param.error}" class="alert alert-error">
+            Email atau password salah. Silakan coba lagi.
+        </div>
+        <div th:if="${param.logout}" class="alert" style="background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2); color: #4ade80;">
+            Anda berhasil logout.
+        </div>
+
+        <form th:action="@{/login}" method="post">
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" name="email" placeholder="curator@gallery.art" required autocomplete="email">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="••••••••" required>
+            </div>
+            <div class="form-row">
+                <label style="display:flex;align-items:center;gap:0.6rem;text-transform:none;letter-spacing:0;cursor:pointer;color:var(--text-muted)">
+                    <input type="checkbox" name="remember-me" style="width:auto; accent-color:#ffffff;">
+                    Remember me
+                </label>
+                <a href="about.html">Forgot password?</a>
+            </div>
+            <button type="submit" class="btn-login">Sign In</button>
+        </form>
+
+    </div>
+</div>
+</body>
+</html>

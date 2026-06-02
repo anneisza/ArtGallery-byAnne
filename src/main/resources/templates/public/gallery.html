@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gallery — Art Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        :root {
+            /* Menyelaraskan ke Tema Gelap Premium / Mamba */
+            --bg: #0d0d0d;
+            --bg2: #121212;
+            --bg3: #181818;
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #ffffff;
+            --text-muted: #8e8e93;
+            --accent: #ffffff;
+        }
+
+        body { background:var(--bg); color:var(--text); font-family:'Plus Jakarta Sans',sans-serif; overflow-x: hidden; }
+
+        h1, h2, .page-header h1, .section-heading, .nav-brand, .artwork-title {
+            font-family: 'Playfair Display', serif !important;
+        }
+
+        /* Navigasi Transparan Blur Blended */
+        nav {
+            display:flex; align-items:center; justify-content:space-between;
+            padding:1.5rem 3rem; background:rgba(13, 13, 13, 0.8);
+            backdrop-filter: blur(12px); border-bottom:1px solid var(--border);
+            position:sticky; top:0; z-index:100;
+        }
+        .nav-brand { font-size:1.1rem; font-weight:600; letter-spacing:3px; text-transform: uppercase; }
+        .nav-links { display:flex; gap:2rem; align-items:center; }
+        .nav-links a { color:var(--text-muted); font-size:0.85rem; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; transition: color 0.2s;}
+        .nav-links a:hover, .nav-links a.active { color:var(--text); }
+        .btn-login { border: 1px solid rgba(255, 255, 255, 0.2); color: white !important; padding: 0.4rem 1.2rem; border-radius: 4px; font-size: 0.8rem; font-weight: 500; text-transform: uppercase; }
+
+        .page-header { padding:5rem 3rem 2rem; max-width:1200px; margin:0 auto; text-align: center; }
+        .page-header h1 { font-size:3rem; font-weight: 400; }
+        .page-header p { color:var(--text-muted); margin-top:0.75rem; font-size: 0.95rem; font-weight: 300; }
+
+        /* ==================== BAGIAN 1: SPOTLIGHT (GSAP STACKED VERTICAL) ==================== */
+        .spotlight-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 2rem 4rem;
+        }
+        .spotlight-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 6px; /* Transisi ke lengkungan siku minimalis mewah */
+            overflow: hidden;
+            width: 100%;
+            margin-bottom: 30vh;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.95); /* Shadow padat gelap mamba */
+            will-change: transform;
+        }
+        .spotlight-img { width:100%; height:460px; background:#141414; display:flex; align-items:center; justify-content:center; }
+        .spotlight-img img { width:100%; height:100%; object-fit:cover; }
+        .spotlight-info { padding:2.5rem; background: var(--bg2); }
+
+        /* ==================== BAGIAN 2: ALL COLLECTIONS (HORIZONTAL CAROUSEL) ==================== */
+        .section-divider { max-width: 1200px; margin: 4rem auto 1rem; padding: 0 3rem; border-top: 1px solid var(--border); padding-top: 4rem; }
+        .section-header-flex { display: flex; justify-content: space-between; align-items: flex-end; }
+        .section-divider h2 { font-size: 2.2rem; font-weight: 400; }
+
+        /* Arrow Minimalis */
+        .custom-carousel-nav { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
+        .nav-btn {
+            background: transparent; border: 1px solid var(--border); color: var(--text);
+            width: 44px; height: 44px; border-radius: 4px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+        }
+        .nav-btn:hover { background: var(--bg3); border-color: var(--text-muted); }
+
+        /* Filters & Search Mamba Style */
+        .filters { display:flex; gap:0.75rem; margin-top:2rem; align-items:center; width: 100%; flex-wrap: wrap; }
+        .filter-btn { padding:0.45rem 1.2rem; border-radius:4px; border:1px solid var(--border); background:transparent; color:var(--text-muted); font-size:0.8rem; letter-spacing: 0.5px; cursor:pointer; text-decoration: none; transition: all 0.2s; text-transform: uppercase;}
+        .filter-btn:hover { color: var(--text); border-color: var(--text-muted); }
+        .filter-btn.active { background:var(--accent); color:#000000; border-color:var(--accent); font-weight: 600; }
+        .search-input { padding:0.5rem 1.2rem; border-radius:4px; border:1px solid var(--border); background:var(--bg3); color:var(--text); font-size:0.85rem; outline:none; margin-left:auto; width: 240px; transition: border-color 0.3s; }
+        .search-input:focus { border-color: rgba(255,255,255,0.3); }
+
+        /* Horizontal Carousel */
+        .carousel-view-wrapper { width: 100%; padding: 2.5rem 0 6rem; }
+        .carousel-artwork-cell {
+            width: 350px;
+            height: 460px;
+            margin-left: 24px;
+            position: relative;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .artwork-img-wrapper { width:100%; height:100%; position: relative; overflow: hidden; }
+        .artwork-img-wrapper img { width:100%; height:100%; object-fit:cover; transition: transform 0.5s ease; }
+        .carousel-artwork-cell:hover .artwork-img-wrapper img { transform: scale(1.03); }
+
+        /* Gradasi Overlay Gelap Terbuka */
+        .artwork-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(13,13,13,1) 0%, rgba(13,13,13,0.4) 60%, transparent 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 2rem;
+        }
+
+        /* Badge Tipis */
+        .badge { display:inline-block; padding:0.25rem 0.75rem; border-radius:4px; font-size:0.65rem; font-weight:600; letter-spacing: 1px; text-transform: uppercase; margin-bottom:0.75rem; width: fit-content;}
+        .badge-human { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+        .badge-ai { background: rgba(79, 110, 247, 0.15); color: #818cf8; }
+        .badge-full-ai { background: rgba(234, 179, 8, 0.15); color: #fbbf24; }
+        .badge-spotlight { border: 1px solid rgba(255,255,255,0.2); color: #ffffff; background: transparent; }
+
+        .artwork-title { font-size:1.4rem; font-weight:400; color: #fff; line-clamp: 2; margin-bottom: 0.25rem; }
+        .artwork-artist { font-size:0.85rem; color:var(--text-muted); font-weight: 300; }
+
+        /* Page Dots Minimalis Putih-Abu */
+        .flickity-page-dots { bottom: -35px; }
+        .flickity-page-dots .dot { background: var(--text-muted); opacity: 0.15; width: 6px; height: 6px; transition: all 0.3s; }
+        .flickity-page-dots .dot.is-selected { background: var(--accent); opacity: 1; transform: scale(1.2); }
+
+        footer { text-align:center; padding:3rem; color:var(--text-muted); font-size:0.8rem; border-top:1px solid var(--border); margin-top: 4rem; }
+    </style>
+</head>
+<body>
+
+
+<div th:replace="~{layout/navbar-public :: navbar(active='gallery')}"></div>
+
+<div class="page-header">
+    <h1>Curated Masterpieces</h1>
+    <p>Scroll down to experience our stacked vertical spotlight or browse the complete index.</p>
+</div>
+
+<section class="spotlight-container">
+    <div class="spotlight-card" th:each="artwork, iterStat : ${artworks}" th:if="${iterStat.index < 3}">
+        <div class="spotlight-img">
+            <img th:if="${artwork.imageUrl != null}" th:src="${artwork.imageUrl}" th:alt="${artwork.title}">
+            <span th:unless="${artwork.imageUrl != null}">🎨</span>
+        </div>
+        <div class="spotlight-info">
+            <span class="badge badge-spotlight">SPOTLIGHT SELECTION</span>
+            <h2 th:text="${artwork.title}" style="font-size: 1.8rem; font-weight: 400; margin-top: 0.5rem; margin-bottom: 0.25rem;">Title</h2>
+            <div th:text="${artwork.artist != null ? artwork.artist.name : '-'}" style="color: var(--text-muted); font-size: 0.9rem; font-weight: 300;">Artist</div>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider">
+    <div class="section-header-flex">
+        <div>
+            <h2>All Collections</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">Browse our complete index with horizontal slide tracking.</p>
+        </div>
+        <div class="custom-carousel-nav">
+            <button class="nav-btn btn-prev" aria-label="Previous Slide">←</button>
+            <button class="nav-btn btn-next" aria-label="Next Slide">→</button>
+        </div>
+    </div>
+
+    <div class="filters">
+        <a th:href="@{/gallery(query=${searchQuery})}" class="filter-btn" th:classappend="${selectedCategory == null or selectedCategory == ''} ? 'active'">All Works</a>
+        <a th:href="@{/gallery(category='PURE_HUMAN', query=${searchQuery})}" class="filter-btn" th:classappend="${selectedCategory == 'PURE_HUMAN'} ? 'active'">Pure Human</a>
+        <a th:href="@{/gallery(category='AI_ASSISTED', query=${searchQuery})}" class="filter-btn" th:classappend="${selectedCategory == 'AI_ASSISTED'} ? 'active'">AI-Assisted</a>
+        <a th:href="@{/gallery(category='FULLY_AI_GENERATED', query=${searchQuery})}" class="filter-btn" th:classappend="${selectedCategory == 'FULLY_AI_GENERATED'} ? 'active'">Fully AI</a>
+
+        <form th:action="@{/gallery}" method="get" style="margin-left:auto; display:flex; align-items:center;">
+            <input type="hidden" name="category" th:value="${selectedCategory}">
+            <input class="search-input" type="text" name="query" placeholder="Search artwork..." th:value="${searchQuery}">
+        </form>
+    </div>
+</div>
+
+<div class="carousel-view-wrapper">
+    <div class="main-carousel">
+        <div class="carousel-artwork-cell" th:each="artwork : ${artworks}">
+            <div class="artwork-img-wrapper">
+                <img th:if="${artwork.imageUrl != null}" th:src="${artwork.imageUrl}" th:alt="${artwork.title}">
+                <span th:unless="${artwork.imageUrl != null}" style="display:flex; height:100%; align-items:center; justify-content:center; font-size:3rem;">🎨</span>
+
+                <div class="artwork-overlay">
+                    <span class="badge"
+                          th:classappend="${artwork.aiAttribution != null and artwork.aiAttribution.involvementLevel.name() == 'PURE_HUMAN'} ? 'badge-human' : (${artwork.aiAttribution != null and artwork.aiAttribution.involvementLevel.name() == 'AI_ASSISTED'} ? 'badge-ai' : 'badge-full-ai')"
+                          th:text="${artwork.aiAttribution != null ? artwork.aiAttribution.involvementLevel.label : 'Uncategorized'}">
+                        Pure Human
+                    </span>
+                    <div class="artwork-title" th:text="${artwork.title}">Title</div>
+                    <div class="artwork-artist" th:text="${artwork.artist != null ? artwork.artist.name : '-'}">Artist</div>
+                    <div style="color: #ffffff; font-size: 0.8rem; margin-top: 1rem; font-weight:500; display:flex; align-items:center; letter-spacing: 0.5px; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.3); width: fit-content; padding-bottom: 2px; cursor: pointer;">
+                        Read more <span style="margin-left: 0.35rem;">→</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>Terms&nbsp;&nbsp;Privacy&nbsp;&nbsp;© 2026 ART GALLERY</footer>
+
+<script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // 1. Logika GSAP Vertikal Stacked Cards untuk Bagian Atas (Spotlight)
+        gsap.registerPlugin(ScrollTrigger);
+        const spotlightCards = document.querySelectorAll('.spotlight-card');
+
+        spotlightCards.forEach((card, index) => {
+            const cardRotation = (index % 2 === 0 ? 0.5 : -0.5) * index;
+            gsap.to(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: "top 120px",
+                    endTrigger: ".spotlight-container",
+                    end: "bottom bottom",
+                    pin: true,
+                    pinSpacing: false,
+                    scrub: true
+                },
+                scale: 0.96 - (index * 0.012),
+                rotation: cardRotation,
+                opacity: 0.95,
+                filter: "blur(0.5px)"
+            });
+        });
+
+        // 2. Logika Flickity Horizontal Carousel untuk Bagian Bawah (All Collections)
+        const carouselElem = document.querySelector('.main-carousel');
+        const flkty = new Flickity(carouselElem, {
+            cellAlign: 'left',
+            contain: true,
+            prevNextButtons: false,
+            pageDots: true,
+            dragFree: true
+        });
+
+        // Event handler tombol custom arrow agar terikat ke mesin slider
+        document.querySelector('.btn-prev').addEventListener('click', () => flkty.previous());
+        document.querySelector('.btn-next').addEventListener('click', () => flkty.next());
+
+        // 3. Live Search Handler
+        const searchInput = document.querySelector('.search-input');
+        if(searchInput) {
+            searchInput.addEventListener('input', function() {
+                clearTimeout(this._timer);
+                this._timer = setTimeout(() => {
+                    this.closest('form').submit();
+                }, 500);
+            });
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home — Art Gallery</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0a0a0f;
+            --bg2: #111118;
+            --bg3: #1a1a24;
+            --border: #2a2a3a;
+            --text: #e0e0f0;
+            --text-muted: #8888aa;
+            --accent: #4f6ef7;
+            --accent2: #7c3aed;
+        }
+        body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
+
+        h1, .hero h1, .section-heading, .nav-brand {
+            font-family: 'Playfair Display', serif !important;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1rem 3rem; background: rgba(17, 17, 24, 0.75);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border); position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+        }
+        .nav-brand { font-size: 1.1rem; font-weight: 700; letter-spacing: 2px; }
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links a { color: var(--text-muted); font-size: 0.9rem; transition: color 0.2s ease; }
+        .nav-links a:hover, .nav-links a.active { color: var(--text); }
+        .btn-login { background: var(--accent); color: white !important; padding: 0.4rem 1rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; }
+
+        /* Slider Indicators Samping */
+        .slider-indicators {
+            position: absolute;
+            left: 3rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            z-index: 10;
+        }
+        .slider-indicators span { cursor: pointer; transition: color 0.3s; }
+        .slider-indicators span.active { color: var(--text); font-weight: 600; position: relative; }
+        .slider-indicators span.active::before {
+            content: ''; position: absolute; left: -15px; top: 50%; transform: translateY(-50%);
+            width: 8px; height: 1px; background: var(--text);
+        }
+
+        /* Immersive Hero Area Terbuka */
+        .hero-container {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            padding: 8rem 3rem 4rem 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Properti background-image digabung langsung agar var CSS bekerja optimal */
+            background-image: linear-gradient(to bottom, rgba(10,10,15,0.4) 0%, rgba(10,10,15,1) 95%), var(--hero-bg-image);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .hero-inner-layout {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 3rem;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            z-index: 5;
+        }
+
+        /* Konten Hero Utama */
+        .hero-content { flex: 1; min-width: 300px; }
+        .hero-label { font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1rem; }
+        .hero h1 { font-size: 3.5rem; line-height: 1.1; max-width: 600px; margin-bottom: 1rem; }
+        .hero h1 span { color: var(--accent); }
+        .hero p { color: var(--text-muted); max-width: 500px; margin: 1.5rem 0; font-size: 1rem; }
+        .hero-btns { display: flex; gap: 1rem; }
+
+        /* Buttons */
+        .btn { display: inline-block; padding: 0.7rem 1.5rem; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; border: none; text-decoration: none; text-align: center; }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+        .btn-outline:hover { color: var(--text); border-color: var(--text-muted); }
+
+        /* Stats */
+        .stats { display: flex; gap: 3rem; padding: 3rem 3rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); max-width: 1200px; margin: 0 auto; }
+        .stat-num { font-size: 2rem; font-weight: 700; color: var(--accent); }
+        .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+        /* Artworks */
+        .section {/* Mengganti 'background: grey' menjadi kaca gelap transparan */
+    background: rgba(20, 20, 25, 0.4);
+
+    /* Efek blur untuk membiaskan gambar background di belakangnya */
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    /* Garis tepi tipis agar sudut kaca terlihat tegas dan menyala */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    /* Menyelaraskan kelengkungan dengan tema mamba (4px) atau serasi dengan kartu */
+    border-radius: 8px;
+
+    max-width: 1200px;
+    margin: 6rem auto;
+    padding: 3rem; /* Memberikan ruang napas di dalam kontainer kaca */
+
+    /* Bayangan halus agar kontainer terlihat mengambang di atas background */
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4); }
+        .section-title { font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .section-heading { font-size: 1.5rem; margin-bottom: 2rem; }
+
+        .artwork-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+        .artwork-card { background: rgba(13, 13, 13, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s;}
+        .artwork-card:hover { transform: translateY(-6px);
+    border-color: rgba(255, 255, 255, 0.2);}
+        .artwork-img { width: 100%; height: 200px; background: linear-gradient(135deg, #1a1a3a 0%, #2a1a4a 50%, #1a2a4a 100%); display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+        .artwork-img img { width: 100%; height: 100%; object-fit: cover; }
+        .artwork-info { padding: 1rem; }
+
+        /* Badges Asli */
+        .artwork-badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.7rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .badge-human { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+        .badge-ai { background: rgba(79, 110, 247, 0.2); color: #818cf8; }
+        .badge-full-ai { background: rgba(234, 179, 8, 0.2); color: #fbbf24; }
+
+        .artwork-title { font-size: 1rem; font-weight: 600; }
+        .artwork-artist { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+        footer { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 4rem; }
+    </style>
+</head>
+<body>
+
+<!-- GANTI KODE DI ATAS DENGAN SATU BARIS INI: -->
+<div th:replace="~{layout/navbar-public :: navbar('home')}"></div>
+
+<div class="slider-indicators">
+    <span>01</span>
+    <span class="active">02</span>
+    <span>03</span>
+</div>
+
+<div class="hero-container" th:style="'--hero-bg-image: url(\'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=1920\');'">
+
+    <div class="hero-inner-layout hero">
+        <div class="hero-content">
+            <div class="hero-label" th:text="${galleryInfo != null ? 'Gallery of the Future' : '- EST. 2026'}">- EST. 2026</div>
+            <h1>Museum of<br><span style="font-style: italic;">Ancient Art</span></h1>
+            <p th:text="${galleryInfo != null ? galleryInfo.tagline : 'Discover the timeless beauty of ancient civilizations through a lens of modern preservation and digital excellence.'}">
+                Discover the timeless beauty of ancient civilizations through a lens of modern preservation and digital excellence.
+            </p>
+            <div class="hero-btns">
+                <a href="/gallery" class="btn btn-primary">Explore Gallery</a>
+                <a href="/about" class="btn btn-outline">Learn More</a>
+            </div>
+        </div>
+
+        <div class="hero-video-wrapper" style="flex: 1; min-width: 400px; display: flex; justify-content: center; align-items: center; padding: 2rem;">
+            <div style="
+                position: relative;
+                width: 380px;
+                height: 380px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 2px solid #00f3ff;
+                box-shadow: 0 0 20px #00f3ff, inset 0 0 20px #00f3ff;
+                padding: 15px;
+            ">
+                <div style="
+                    position: absolute;
+                    width: 90%;
+                    height: 90%;
+                    border-radius: 50%;
+                    border: 1px solid rgba(0, 243, 255, 0.4);
+                    box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+                    pointer-events: none;
+                "></div>
+
+                <video autoplay muted loop playsinline
+                       style="
+                           width: 100%;
+                           height: 100%;
+                           border-radius: 50%;
+                           overflow: hidden;
+                           object-fit: cover;
+                           border: 2px solid #ffffff;
+                           box-shadow: 0 0 10px rgba(255,255,255,0.5);
+                       ">
+                    <source th:src="@{/videos/pameran-seni2.mp4}" type="video/mp4">
+                    Browser kamu tidak mendukung tag video.
+                </video>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="stats">
+    <div>
+        <div class="stat-num" th:text="${totalArtworks} + '+'">250+</div>
+        <div class="stat-label">Artworks</div>
+    </div>
+    <div>
+        <div class="stat-num" th:text="${totalArtists}">48</div>
+        <div class="stat-label">Artists</div>
+    </div>
+    <div>
+        <div class="stat-num" th:text="${totalExhibitions}">12</div>
+        <div class="stat-label">Exhibitions</div>
+    </div>
+    <div>
+        <div class="stat-num">3</div>
+        <div class="stat-label">AI Tools Tracked</div>
+    </div>
+</div>
+
+<div id="container-scroll-root"></div>
+
+<div class="section">
+    <div class="section-title">Featured Artworks</div>
+    <div class="section-heading">Curated Selection</div>
+    <div class="artwork-grid">
+        <div class="artwork-card" th:each="artwork : ${approvedArtworks}" th:if="${artworkStat.index < 3}">
+            <div class="artwork-img">
+                <img th:if="${artwork.imageUrl != null}" th:src="${artwork.imageUrl}" th:alt="${artwork.title}">
+                <span th:unless="${artwork.imageUrl != null}">🎨</span>
+            </div>
+            <div class="artwork-info">
+                <span class="artwork-badge"
+                      th:classappend="${artwork.aiAttribution != null and artwork.aiAttribution.involvementLevel.name() == 'PURE_HUMAN'} ? 'badge-human' : (${artwork.aiAttribution != null and artwork.aiAttribution.involvementLevel.name() == 'AI_ASSISTED'} ? 'badge-ai' : 'badge-full-ai')"
+                      th:text="${artwork.aiAttribution != null ? artwork.aiAttribution.involvementLevel.label : 'Pure Human Art'}">
+                    Pure Human Art
+                </span>
+                <div class="artwork-title" th:text="${artwork.title}">Artwork Title</div>
+                <div class="artwork-artist" th:text="${artwork.artist != null ? 'by ' + artwork.artist.name : ''}">by Artist</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <span>Terms</span>&nbsp;&nbsp;&nbsp;<span>Privacy</span>
+    <p style="margin-top:0.5rem;">© 2026 ART GALLERY</p>
+</footer>
+
+<script type="text/babel" th:src="@{/js/scroll-animation.js}"></script>
+</body>
+</html>

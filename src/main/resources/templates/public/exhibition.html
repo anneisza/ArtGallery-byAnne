@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Exhibitions — Art Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        :root {
+            /* Sinkronisasi Warna dengan Tema Mamba */
+            --bg: #0d0d0d;
+            --bg2: #121212;
+            --bg3: #181818;
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #ffffff;
+            --text-muted: #8e8e93;
+            --accent: #ffffff;
+        }
+        body {
+    /* PERBAIKAN: Menghapus backslash (\) pada tanda kutip url */
+    background: linear-gradient(to bottom, rgba(13, 13, 13, 0.88), rgba(13, 13, 13, 0.96)),
+                url('https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=1920') no-repeat center center fixed;
+    background-size: cover;
+    color: var(--text);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    overflow-x: hidden;
+}
+
+        /* Navigasi Transparan Blur Blended */
+        nav {
+            display:flex; align-items:center; justify-content:space-between;
+            padding:1.5rem 3rem; background:rgba(13, 13, 13, 0.8);
+            backdrop-filter: blur(12px); border-bottom:1px solid var(--border);
+            position:sticky; top:0; z-index:100;
+        }
+        .nav-brand { font-family: 'Playfair Display', serif !important; font-size:1.1rem; font-weight:600; letter-spacing:3px; text-transform: uppercase; }
+        .nav-links { display:flex; gap:2rem; align-items:center; }
+        .nav-links a { color:var(--text-muted); font-size:0.85rem; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; transition: color 0.2s;}
+        .nav-links a:hover, .nav-links a.active { color:var(--text); }
+        .btn-login { border: 1px solid rgba(255, 255, 255, 0.2); color: white !important; padding: 0.4rem 1.2rem; border-radius: 4px; font-size: 0.8rem; font-weight: 500; text-transform: uppercase; }
+
+        .content { max-width:1200px; margin:0 auto; padding:5rem 3rem; }
+        h1, .hero h1, .section-heading {font-family: 'Playfair Display', serif !important;  font-size:3rem; font-weight: 400; margin-bottom:0.75rem; text-align: center; }
+        p.sub { color:var(--text-muted); margin-bottom:4rem; text-align: center; font-size: 0.95rem; font-weight: 300; }
+
+        /* Kartu Ongoing - Diubah Menjadi Efek Kaca Gelap Mewah */
+.ongoing-card {
+    background: rgba(18, 18, 18, 0.5); /* Hitam transparan setengah menerawang */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2.5rem;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+        /* Badge Tipis Minimalis */
+        .badge-ongoing { background:rgba(34,197,94,0.15); color:#4ade80; padding:0.25rem 0.75rem; border-radius:4px; font-size:0.7rem; font-weight:600; letter-spacing: 1px; display:inline-block; margin-bottom:1.25rem; }
+        .badge-past { background:rgba(255,255,255,0.05); color:var(--text-muted); border: 1px solid var(--border); padding:0.2rem 0.6rem; border-radius:4px; font-size:0.65rem; font-weight:600; letter-spacing: 1px; display:inline-block; margin-bottom:1rem; }
+
+        .ongoing-title { font-size:2rem; font-weight:400; margin-bottom:0.5rem; }
+        .ongoing-meta { color:var(--text-muted); font-size:0.85rem; font-weight: 300; margin-bottom:1.25rem; }
+        .ongoing-desc { color:var(--text-muted); font-size:0.95rem; font-weight: 300; line-height: 1.6; margin-bottom:2rem; max-width: 800px; }
+
+        .btn { display:inline-block; padding:0.6rem 1.5rem; border-radius:4px; font-size:0.85rem; font-weight: 600; cursor: pointer; text-decoration: none; letter-spacing: 0.5px; transition: opacity 0.2s; }
+        .btn-primary { background:var(--accent); color:#000000; } /* Tombol matte putih padat */
+        .btn-primary:hover { opacity: 0.9; }
+
+        .section-divider { font-size:0.75rem; letter-spacing:3px; text-transform:uppercase; color:var(--text-muted); margin:5rem 0 2rem; border-top: 1px solid var(--border); padding-top: 3rem; }
+
+        /* Grid Koleksi Lampau */
+        .past-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+        /* Kartu Past Exhibition - Efek Kaca Lebih Tipis */
+.past-card {
+    background: rgba(24, 24, 24, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.75rem;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+        .past-card:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(24, 24, 24, 0.6); /* Sedikit lebih tebal saat disorot */
+}
+        .past-title { font-size:1.3rem; font-weight:400; margin-bottom:0.5rem; color: #ffffff; }
+        .past-meta { font-size:0.85rem; color:var(--text-muted); font-weight: 300; }
+
+        footer { text-align:center; padding:3rem; color:var(--text-muted); font-size:0.8rem; border-top:1px solid var(--border); margin-top:6rem; }
+    </style>
+</head>
+<body>
+
+<!-- GANTI KODE DI ATAS DENGAN SATU BARIS INI: -->
+<div th:replace="~{layout/navbar-public :: navbar('exhibition')}"></div>
+
+<div class="content">
+    <h1>Exhibitions</h1>
+    <p class="sub">Explore our upcoming, ongoing, and past digital curation spaces.</p>
+
+    <div th:each="ex : ${ongoingExhibitions}" class="ongoing-card">
+        <span class="badge-ongoing">ONGOING</span>
+        <div class="ongoing-title" th:text="${ex.title}">Exhibition Title</div>
+        <div class="ongoing-meta"
+             th:text="${#temporals.format(ex.startDate, 'dd MMM yyyy')} + ' – ' + ${#temporals.format(ex.endDate, 'dd MMM yyyy')} + ' • ' + ${ex.location}">
+            Date • Location
+        </div>
+        <div class="ongoing-desc" th:text="${ex.description}">Description</div>
+        <a href="#" class="btn btn-primary">View Details</a>
+    </div>
+
+    <div class="section-divider">Past Exhibitions</div>
+
+    <div class="past-grid">
+        <div class="past-card" th:each="ex : ${pastExhibitions}">
+            <span class="badge-past">PAST</span>
+            <div class="past-title" th:text="${ex.title}">Title</div>
+            <div class="past-meta" th:text="${#temporals.format(ex.startDate, 'MMM yyyy')} + ' – ' + ${#temporals.format(ex.endDate, 'MMM yyyy')}">Date</div>
+        </div>
+    </div>
+</div>
+<footer>Terms&nbsp;&nbsp;Privacy&nbsp;&nbsp;© 2026 ART GALLERY</footer>
+</body>
+</html>

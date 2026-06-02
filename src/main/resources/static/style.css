@@ -1,0 +1,31 @@
+/* Font Serif untuk Judul agar terkesan Klasik/Museum */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+h1, .font-serif {
+    font-family: 'Playfair Display', serif;
+}
+
+/* Trik Efek Lingkaran Neon Menyala */
+.neon-circle {
+    box-shadow: 0 0 15px #06b6d4,        /* Cyan glow dalam */
+                inset 0 0 15px #06b6d4,  /* Cyan glow luar */
+                0 0 30px #1d4ed8,        /* Lapisan biru gelap luar */
+                inset 0 0 30px #1d4ed8;
+    animation: pulseGlow 4s infinite alternate;
+}
+
+.circle-outer {
+    box-shadow: 0 0 40px rgba(29, 78, 216, 0.2);
+}
+
+/* Animasi halus biar neon-nya hidup */
+@keyframes pulseGlow {
+    0% {
+        transform: scale(1);
+        opacity: 0.9;
+    }
+    100% {
+        transform: scale(1.02);
+        opacity: 1;
+    }
+}

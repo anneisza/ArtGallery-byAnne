@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Artists — Art Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        :root {
+            /* Sinkronisasi Tema Gelap Premium / Mamba */
+            --bg: #0d0d0d;
+            --bg2: #121212;
+            --bg3: #181818;
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #ffffff;
+            --text-muted: #8e8e93;
+            --accent: #ffffff;
+            --arrow-bg: #181818;
+            --arrow-hover: #ffffff;
+        }
+
+        body { background:var(--bg); color:var(--text); font-family:'Plus Jakarta Sans',sans-serif; overflow-x: hidden; }
+
+        h1, .nav-brand, .name {
+            font-family: 'Playfair Display', serif !important;
+        }
+
+        /* Navigasi Transparan Blur Blended */
+        nav {
+            display:flex; align-items:center; justify-content:space-between;
+            padding:1.5rem 3rem; background:rgba(13, 13, 13, 0.8);
+            backdrop-filter: blur(12px); border-bottom:1px solid var(--border);
+            position:sticky; top:0; z-index:100;
+        }
+        .nav-brand { font-size:1.1rem; font-weight:600; letter-spacing:3px; text-transform: uppercase; }
+        .nav-links { display:flex; gap:2rem; align-items:center; }
+        .nav-links a { color:var(--text-muted); font-size:0.85rem; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; transition: color 0.2s;}
+        .nav-links a:hover, .nav-links a.active { color:var(--text); }
+        .btn-login { border: 1px solid rgba(255, 255, 255, 0.2); color: white !important; padding: 0.4rem 1.2rem; border-radius: 4px; font-size: 0.8rem; font-weight: 500; text-transform: uppercase; }
+
+        .content { max-width:1100px; margin:0 auto; padding:5rem 3rem; }
+        h1 { font-size:3rem; font-weight: 400; margin-bottom:0.75rem; text-align: center; }
+        p.sub { color:var(--text-muted); margin-bottom:5rem; text-align: center; font-size: 0.95rem; font-weight: 300; }
+
+        /* ==================== STYLE MAIN COMPONENT: CIRCULAR TESTIMONIALS ==================== */
+        .testimonial-container {
+            width: 100%;
+            margin-top: 2rem;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        @media (min-width: 768px) {
+            .testimonial-grid {
+                grid-template-columns: 1.1fr 0.9fr;
+                gap: 5rem;
+            }
+        }
+
+        /* 3D Stack Image Viewer Minimalis */
+        .image-container {
+            position: relative;
+            width: 100%;
+            height: 28rem;
+            perspective: 1200px;
+        }
+
+        .testimonial-image {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 4px; /* Siku tajam elegan khas galeri mamba */
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--border);
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+        }
+
+        /* Content & Text Styles */
+        .testimonial-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-left: 1rem;
+        }
+
+        .name {
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .designation {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-left: 2px solid rgba(255, 255, 255, 0.4);
+            padding-left: 0.75rem;
+        }
+
+        .quote {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-muted);
+            font-weight: 300;
+            min-height: 100px;
+        }
+
+        /* Word Span Animation Effects */
+        .word {
+            display: inline-block;
+            opacity: 0;
+            filter: blur(8px);
+            transform: translateY(5px);
+        }
+
+        /* Navigation Circle Button Dashboard */
+        .arrow-buttons {
+            display: flex;
+            gap: 1rem;
+            padding-top: 3rem;
+        }
+
+        .arrow-button {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background-color: var(--arrow-bg);
+            border: 1px solid var(--border);
+            color: #fff;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 1.1rem;
+        }
+
+        .arrow-button:hover {
+            background-color: var(--arrow-hover);
+            color: #000000; /* Balik warna jadi hitam pekat saat hover */
+            transform: scale(1.03);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        footer { text-align:center; padding:3rem; color:var(--text-muted); font-size:0.8rem; border-top:1px solid var(--border); margin-top:6rem; }
+    </style>
+</head>
+<body>
+
+<!-- GANTI KODE DI ATAS DENGAN SATU BARIS INI: -->
+<div th:replace="~{layout/navbar-public :: navbar('artists')}"></div>
+
+<div class="content">
+    <h1>Our Resident Artists</h1>
+    <p class="sub">Cycle through our directory of creators driving global aesthetics forward.</p>
+
+    <div class="testimonial-container">
+        <div class="testimonial-grid">
+
+            <div class="image-container" id="imageContainer">
+                <div th:each="artist, iter : ${artists}">
+                    <img th:if="${artist.photoUrl != null}"
+                         th:src="${artist.photoUrl}"
+                         th:alt="${artist.name}"
+                         class="testimonial-image"
+                         th:data-index="${iter.index}"
+                         th:data-name="${artist.name}"
+                         th:data-specialty="${artist.specialty}"
+                         th:data-works="${artist.totalWorks + ' Masterpieces Created.'}">
+
+                    <img th:unless="${artist.photoUrl != null}"
+                         src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=1000"
+                         th:alt="${artist.name}"
+                         class="testimonial-image"
+                         th:data-index="${iter.index}"
+                         th:data-name="${artist.name}"
+                         th:data-specialty="${artist.specialty}"
+                         th:data-works="${artist.totalWorks + ' Masterpieces Created.'}">
+                </div>
+            </div>
+
+            <div class="testimonial-content">
+                <div id="textWrapper">
+                    <h3 class="name" id="artistName">Artist Name</h3>
+                    <p class="designation" id="artistSpecialty">Specialty</p>
+                    <p class="quote" id="artistQuote">Total Works</p>
+                </div>
+
+                <div class="arrow-buttons">
+                    <button class="arrow-button" id="prevBtn" aria-label="Previous artist">←</button>
+                    <button class="arrow-button" id="nextBtn" aria-label="Next artist">→</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<footer>Terms&nbsp;&nbsp;Privacy&nbsp;&nbsp;© 2026 ART GALLERY</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const images = document.querySelectorAll('.testimonial-image');
+        const totalItems = images.length;
+
+        if (totalItems === 0) return;
+
+        let activeIndex = 0;
+        let containerWidth = document.getElementById('imageContainer').offsetWidth;
+
+        function calculateGap(width) {
+            const minWidth = 1024;
+            const maxWidth = 1456;
+            const minGap = 50;
+            const maxGap = 80;
+            if (width <= minWidth) return minGap;
+            if (width >= maxWidth) return Math.max(minGap, maxGap + 0.05 * (width - maxWidth));
+            return minGap + (maxGap - minGap) * ((width - minWidth) / (maxWidth - minWidth));
+        }
+
+        function updateImagesStyle() {
+            const gap = calculateGap(containerWidth);
+            const maxStickUp = gap * 0.6;
+
+            images.forEach((img, index) => {
+                const isActive = index === activeIndex;
+                const isLeft = index === (activeIndex - 1 + totalItems) % totalItems;
+                const isRight = index === (activeIndex + 1) % totalItems;
+
+                if (isActive) {
+                    gsap.to(img, {
+                        zIndex: 3, opacity: 1, pointerEvents: "auto",
+                        x: 0, y: 0, scale: 1, rotateY: 0,
+                        duration: 0.8, ease: "power2.out"
+                    });
+                    updateTextContent(img);
+                } else if (isLeft) {
+                    gsap.to(img, {
+                        zIndex: 2, opacity: 0.7, pointerEvents: "auto",
+                        x: -gap, y: -maxStickUp, scale: 0.85, rotateY: 15,
+                        duration: 0.8, ease: "power2.out"
+                    });
+                } else if (isRight) {
+                    gsap.to(img, {
+                        zIndex: 2, opacity: 0.7, pointerEvents: "auto",
+                        x: gap, y: -maxStickUp, scale: 0.85, rotateY: -15,
+                        duration: 0.8, ease: "power2.out"
+                    });
+                } else {
+                    gsap.to(img, {
+                        zIndex: 1, opacity: 0, pointerEvents: "none",
+                        x: 0, y: 0, scale: 0.7, rotateY: 0,
+                        duration: 0.8, ease: "power2.out"
+                    });
+                }
+            });
+        }
+
+        function updateTextContent(activeImg) {
+            const name = activeImg.getAttribute('data-name');
+            const specialty = activeImg.getAttribute('data-specialty');
+            const quoteText = activeImg.getAttribute('data-works');
+
+            document.getElementById('artistName').innerText = name;
+            document.getElementById('artistSpecialty').innerText = specialty;
+
+            const quoteElement = document.getElementById('artistQuote');
+            quoteElement.innerHTML = '';
+
+            quoteText.split(" ").forEach((word, i) => {
+                const span = document.createElement('span');
+                span.className = 'word';
+                span.innerHTML = word + '&nbsp;';
+                quoteElement.appendChild(span);
+
+                gsap.to(span, {
+                    opacity: 1,
+                    filter: "blur(0px)",
+                    y: 0,
+                    delay: i * 0.03,
+                    duration: 0.3,
+                    ease: "power1.out"
+                });
+            });
+        }
+
+        function showNext() {
+            activeIndex = (activeIndex + 1) % totalItems;
+            updateImagesStyle();
+        }
+
+        function showPrev() {
+            activeIndex = (activeIndex - 1 + totalItems) % totalItems;
+            updateImagesStyle();
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', showNext);
+        document.getElementById('prevBtn').addEventListener('click', showPrev);
+
+        window.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowLeft") showPrev();
+            if (e.key === "ArrowRight") showNext();
+        });
+
+        window.addEventListener("resize", () => {
+            containerWidth = document.getElementById('imageContainer').offsetWidth;
+            updateImagesStyle();
+        });
+
+        updateImagesStyle();
+    });
+</script>
+</body>
+</html>

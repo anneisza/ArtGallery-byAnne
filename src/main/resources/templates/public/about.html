@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>About — Art Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        :root {
+            /* Sinkronisasi Tema Gelap Premium / Mamba */
+            --bg: #0d0d0d;
+            --bg2: #121212;
+            --bg3: #181818;
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #ffffff;
+            --text-muted: #8e8e93;
+            --accent: #ffffff;
+        }
+
+        body {
+            /* Gabungan linear-gradient (gelap) + gambar dari folder lokal */
+            background: linear-gradient(to bottom, rgba(13, 13, 13, 0.88), rgba(13, 13, 13, 0.96)),
+                        url('/photos/bg.png') no-repeat center center fixed;
+            background-size: cover;
+        color:var(--text); font-family:'Plus Jakarta Sans',sans-serif; overflow-x: hidden; }
+
+        h1, h2, .nav-brand {
+            font-family: 'Playfair Display', serif !important;
+        }
+
+        /* Navigasi Transparan Blur Blended */
+        nav {
+            display:flex; align-items:center; justify-content:space-between;
+            padding:1.5rem 3rem; background:rgba(13, 13, 13, 0.8);
+            backdrop-filter: blur(12px); border-bottom:1px solid var(--border);
+            position:sticky; top:0; z-index:100;
+        }
+        .nav-brand { font-size:1.1rem; font-weight:600; letter-spacing:3px; text-transform: uppercase; }
+        .nav-links { display:flex; gap:2rem; align-items:center; }
+        .nav-links a { color:var(--text-muted); font-size:0.85rem; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; transition: color 0.2s;}
+        .nav-links a:hover, .nav-links a.active { color:var(--text); }
+        .btn-login { border: 1px solid rgba(255, 255, 255, 0.2); color: white !important; padding: 0.4rem 1.2rem; border-radius: 4px; font-size: 0.8rem; font-weight: 500; text-transform: uppercase; }
+
+        .content { max-width:1200px; margin:0 auto; padding:5rem 3rem; }
+        h1 { font-size:3rem; font-weight: 400; margin-bottom:0.75rem; text-align: center; }
+        p.sub { color:var(--text-muted); margin-bottom:5rem; text-align: center; font-size: 0.95rem; font-weight: 300; }
+
+        .section-label { font-size:0.75rem; letter-spacing:3px; text-transform:uppercase; color:var(--text-muted); margin:2rem 0 0.75rem; }
+        h2 { font-size:2rem; font-weight: 400; margin-bottom:1.5rem; color: #ffffff; }
+        .about-text { color:var(--text-muted); line-height:1.8; max-width:800px; font-size: 1rem; font-weight: 300; }
+
+        /* Grid Info Minimalis Siku Tajam */
+        .info-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; margin-top:4rem; }
+        .info-card { background:var(--bg2); border:1px solid var(--border); border-radius:4px; padding:2rem; transition: border-color 0.3s; }
+        .info-card:hover { border-color: rgba(255,255,255,0.15); }
+        .info-label { font-size:0.7rem; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.75rem; font-weight: 600; }
+        .info-value { font-size:1rem; font-weight: 300; color: #ffffff; line-height: 1.5; }
+
+        footer { text-align:center; padding:3rem; color:var(--text-muted); font-size:0.8rem; border-top:1px solid var(--border); margin-top:8rem; }
+    </style>
+</head>
+<body>
+
+<!-- GANTI KODE DI ATAS DENGAN SATU BARIS INI: -->
+<div th:replace="~{layout/navbar-public :: navbar('about')}"></div>
+
+<div class="content">
+    <h1>About Us</h1>
+    <p class="sub">Our story, our mission, and how to find our space.</p>
+
+    <div class="section-label">Our Story</div>
+    <h2 th:text="${galleryInfo != null ? galleryInfo.galleryName : 'Art Gallery'}">Art Gallery</h2>
+    <p class="about-text"
+       th:text="${galleryInfo != null ? galleryInfo.description : 'Galeri seni digital terkemuka yang menjembatani seni klasik dan komputasional.'}">
+        Deskripsi galeri...
+    </p>
+
+    <div class="info-grid">
+        <div class="info-card">
+            <div class="info-label">Location</div>
+            <div class="info-value" th:text="${galleryInfo != null ? galleryInfo.address : 'Jl. Seni No. 12, Yogyakarta'}">Address</div>
+        </div>
+        <div class="info-card">
+            <div class="info-label">Opening Hours</div>
+            <div class="info-value" th:text="${galleryInfo != null ? galleryInfo.openingHours : 'Tue–Sun, 10:00–20:00 WIB'}">Hours</div>
+        </div>
+        <div class="info-card">
+            <div class="info-label">Contact</div>
+            <div class="info-value" th:text="${galleryInfo != null ? galleryInfo.contactEmail : 'gallery@artgallery.art'}">Email</div>
+        </div>
+    </div>
+</div>
+<footer>Terms&nbsp;&nbsp;Privacy&nbsp;&nbsp;© 2026 ART GALLERY</footer>
+</body>
+</html>
